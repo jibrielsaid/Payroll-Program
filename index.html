@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GRC Payroll Program</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="container">
+
+  
+  <div id="inputPage">
+    <h1>GRC Payroll Program</h1>
+    <form id="payrollForm">
+      <label for="empID">Employee ID</label>
+      <input type="text" id="empID" name="empID" required placeholder="" />
+
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" name="lastName" required placeholder="" />
+
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" name="firstName" required placeholder="" />
+
+      <label for="middleName">Middle Name</label>
+      <input type="text" id="middleName" name="middleName" required placeholder="" />
+
+      <label for="position">Position</label>
+      <input type="text" id="position" name="position" required placeholder="" />
+
+      <label for="rate">Rate per Day</label>
+      <input type="number" id="rate" name="rate" required placeholder="695" min="0" step="" />
+
+      <label for="daysWorked">Days Worked</label>
+      <input type="number" id="daysWorked" name="daysWorked" required placeholder="" min="0" step="1" />
+
+      <button type="submit">Compute Payroll</button>
+    </form>
+  </div>
+
+  
+  <div id="resultPage" class="hidden">
+    <h2>PAYROLL PROGRAM</h2>
+    <div class="line"><span>ID:</span><span id="resEmpID"></span></div>
+    <div class="line"><span>NAME:</span><span id="resName"></span></div>
+    <div class="line"><span>POSITION:</span><span id="resPosition"></span></div>
+
+    <div class="line"><span>RATE:</span><span id="resRate"></span></div>
+    <div class="line"><span>DAYS:</span><span id="resDays"></span></div>
+
+    <div class="line bold"><span>GROSS PAY:</span><span id="resGrossPay"></span></div>
+
+    <div class="deductions">
+      <div class="line"><span>SSS (5%):</span><span id="resSSS"></span></div>
+      <div class="line"><span>PAG-IBIG (3%):</span><span id="resPagibig"></span></div>
+      <div class="line"><span>PHILHEALTH (2%):</span><span id="resPhilhealth"></span></div>
+      <div class="line"><span>TAX (5%):</span><span id="resTax"></span></div>
+      <div class="line bold"><span>TOTAL DEDUCTION:</span><span id="resTotalDeduction"></span></div>
+    </div>
+
+    <div class="line bold"><span>NET PAY:</span><span id="resNetPay"></span></div>
+
+    <button class="back-btn" id="backBtn">Back to Input</button>
+  </div>
+
+</div>
+
+<script>
+  const form = document.getElementById('payrollForm');
+  const inputPage = document.getElementById('inputPage');
+  const resultPage = document.getElementById('resultPage');
+  const backBtn = document.getElementById('backBtn');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    
+    const empID = form.empID.value.trim();
+    const lastName = form.lastName.value.trim();
+    const firstName = form.firstName.value.trim();
+    const middleName = form.middleName.value.trim();
+    const position = form.position.value.trim();
+    const rate = parseFloat(form.rate.value);
+    const days = parseInt(form.daysWorked.value);
+
+
+    const grossPay = rate * days;
+    const sss = +(grossPay * 0.05).toFixed(2);
+    const pagibig = +(grossPay * 0.03).toFixed(2);
+    const philhealth = +(grossPay * 0.02).toFixed(2);
+    const tax = +(grossPay * 0.05).toFixed(2);
+    const totalDeduction = +(sss + pagibig + philhealth + tax).toFixed(2);
+    const netPay = +(grossPay - totalDeduction).toFixed(2);
+
+    
+    const fullName = `${lastName}, ${firstName} ${middleName.charAt(0)}.`;
+
+   
+    document.getElementById('resEmpID').textContent = empID;
+    document.getElementById('resName').textContent = fullName;
+    document.getElementById('resPosition').textContent = position;
+    document.getElementById('resRate').textContent = rate.toFixed(2);
+    document.getElementById('resDays').textContent = days;
+    document.getElementById('resGrossPay').textContent = grossPay.toFixed(2);
+    document.getElementById('resSSS').textContent = sss.toFixed(2);
+    document.getElementById('resPagibig').textContent = pagibig.toFixed(2);
+    document.getElementById('resPhilhealth').textContent = philhealth.toFixed(2);
+    document.getElementById('resTax').textContent = tax.toFixed(2);
+    document.getElementById('resTotalDeduction').textContent = totalDeduction.toFixed(2);
+    document.getElementById('resNetPay').textContent = netPay.toFixed(2);
+
+    
+    inputPage.classList.add('hidden');
+    resultPage.classList.remove('hidden');
+  });
+
+  backBtn.addEventListener('click', () => {
+   
+    resultPage.classList.add('hidden');
+    inputPage.classList.remove('hidden');
+    form.reset();
+  });
+</script>
+
+</body>
+</html>
